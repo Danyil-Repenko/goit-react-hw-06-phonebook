@@ -1,4 +1,7 @@
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from 'components/redux/selectors';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { addContact } from 'components/redux/contactSlice';
 import {
   Form,
   InputWrapper,
@@ -7,9 +10,29 @@ import {
   SubmitBtn,
 } from './ContactForm.styled';
 
-export const ContactForm = ({ handleSubmit }) => {
+export const ContactForm = () => {
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+
+  const createNewContact = e => {
+    e.preventDefault();
+
+    const name = e.target.elements.name.value;
+    const number = e.target.elements.number.value;
+    const nameSameness = contacts.find(contact => contact.name === name);
+
+    if (nameSameness) {
+      Notify.info(`${name} is already in contacts`);
+      return;
+    } else {
+      dispatch(addContact({ name, number }));
+    }
+
+    e.target.reset();
+  };
+
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={createNewContact}>
       <InputWrapper>
         <Label>Name</Label>
         <Input
@@ -33,8 +56,4 @@ export const ContactForm = ({ handleSubmit }) => {
       <SubmitBtn type="submit">Add contact</SubmitBtn>
     </Form>
   );
-};
-
-ContactForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
 };
