@@ -1,33 +1,36 @@
 import { ContactItem } from 'components/ContactsItem/ContactsItem';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { getFilterState, getContacts } from 'components/redux/selectors';
 import { List } from 'components/ContactList/ContactList.styled';
 
-let createContacts = null;
-let creatContactItem = null;
+let visibleContacts = null;
 
-export const ContactList = ({ contacts, filterState, handleBtnClick }) => {
-  creatContactItem = ({ id, name, number }) => (
-    <ContactItem
-      key={id}
-      name={name}
-      number={number}
-      handleRemoval={handleBtnClick}
-    />
-  );
+export const ContactList = ({ handleBtnClick }) => {
+  const filterState = useSelector(getFilterState);
+  const contacts = useSelector(getContacts);
 
   if (filterState === '') {
-    createContacts = contacts.map(creatContactItem);
+    visibleContacts = contacts;
   } else {
-    createContacts = contacts
-      .filter(contact => contact.name.toLowerCase().includes(filterState))
-      .map(creatContactItem);
+    visibleContacts = contacts.filter(({ name }) =>
+      name.toLowerCase().includes(filterState)
+    );
   }
-
-  return <List>{createContacts}</List>;
+  return (
+    <List>
+      {visibleContacts.map(({ id, name, number }) => (
+        <ContactItem
+          key={id}
+          name={name}
+          number={number}
+          handleRemoval={handleBtnClick}
+        />
+      ))}
+    </List>
+  );
 };
 
 ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(PropTypes.object).isRequired,
-  filterState: PropTypes.string.isRequired,
   handleBtnClick: PropTypes.func.isRequired,
 };

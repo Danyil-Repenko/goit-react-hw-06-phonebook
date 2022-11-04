@@ -1,7 +1,15 @@
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { filterContacts } from 'components/redux/filterSlice';
 import { InputWrapper, Label, Input } from './Filter.styled';
 
-export const Filter = ({ handleInput }) => {
+export const Filter = () => {
+  const dispatch = useDispatch();
+
+  const handleInput = e => {
+    const input = e.target.value.trim().toLowerCase();
+    dispatch(filterContacts(input));
+  };
+
   return (
     <InputWrapper>
       <Label>
@@ -10,8 +18,4 @@ export const Filter = ({ handleInput }) => {
       </Label>
     </InputWrapper>
   );
-};
-
-Filter.propTypes = {
-  handleInput: PropTypes.func.isRequired,
 };

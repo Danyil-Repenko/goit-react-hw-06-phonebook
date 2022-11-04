@@ -13,7 +13,6 @@ export function App() {
   const [contacts, setContacts] = useState(
     () => contactsFormLocalStorage.current || []
   );
-  const [filter, setFilter] = useState('');
 
   useEffect(() => {
     if (contacts === [] || contacts === contactsFormLocalStorage.current)
@@ -56,22 +55,14 @@ export function App() {
     }
   };
 
-  const handleFilterInput = e => {
-    setFilter(e.target.value.toLowerCase());
-  };
-
   return (
     <div style={{ margin: '20px 0 0 20px' }}>
       <h1>Phonebook</h1>
       <ContactForm handleSubmit={addContact} />
 
       <h2>Contacts</h2>
-      <Filter handleInput={handleFilterInput} />
-      <ContactList
-        contacts={contacts}
-        filterState={filter}
-        handleBtnClick={removeContact}
-      />
+      <Filter />
+      <ContactList contacts={contacts} handleBtnClick={removeContact} />
     </div>
   );
 }
