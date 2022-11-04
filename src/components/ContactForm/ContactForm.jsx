@@ -14,7 +14,7 @@ export const ContactForm = () => {
   const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
 
-  const createNewContact = e => {
+  const addNewContact = e => {
     e.preventDefault();
 
     const name = e.target.elements.name.value;
@@ -32,7 +32,7 @@ export const ContactForm = () => {
   };
 
   return (
-    <Form onSubmit={createNewContact}>
+    <Form onSubmit={addNewContact}>
       <InputWrapper>
         <Label>Name</Label>
         <Input
